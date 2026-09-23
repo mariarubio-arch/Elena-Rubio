@@ -1,282 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Responsivas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-                background-color: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-container-bg {
-                background: transparent !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                overflow: visible !important;
-            }
-            #print-area {
-                width: 21.59cm !important;
-                height: 27.94cm !important; /* Strictly 1 Letter page */
-                margin: 0 !important;
-                padding: 1.5cm 1.5cm !important; /* Generous margins inside the single page */
-                box-shadow: none !important;
-                border: none !important;
-                page-break-inside: avoid !important;
-            }
-            @page {
-                size: letter;
-                margin: 0; /* Remove browser default margins to rely on #print-area padding */
-            }
-        }
-
-        /* Specific physical dimensions for the preview screen to mimic the printed page */
-        .page-preview {
-            width: 21.59cm;
-            height: 27.94cm;
-        }
-
-        /* Custom scrollbar for sidebar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body class="bg-gray-100 flex h-screen overflow-hidden font-sans text-gray-800">
-
-    <aside class="w-full md:w-96 bg-white border-r border-gray-200 shadow-xl flex flex-col h-full z-10 shrink-0 no-print">
-        <div class="p-5 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-            <div>
-                <h1 class="text-xl font-bold text-gray-800">Responsivas</h1>
-                <p class="text-xs text-gray-500 uppercase tracking-wider">Generador de Documentos</p>
-            </div>
-            <div class="w-8 h-8 rounded-full bg-[#6eb646] flex items-center justify-center text-white font-bold">
-                R
-            </div>
-        </div>
-
-        <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-6">
-            
-            <!-- Employee Data -->
-            <section class="space-y-3">
-                <h2 class="text-xs font-bold text-[#6eb646] uppercase tracking-wider border-b border-gray-200 pb-1">1. Datos del Empleado</h2>
-                <div class="space-y-2">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Nombre(s)</label>
-                        <input type="text" id="f-nombre" class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#6eb646] outline-none" oninput="updatePreview()" placeholder="Ej. Juan">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-600 mb-1">Apellidos</label>
-                        <input type="text" id="f-apellidos" class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#6eb646] outline-none" oninput="updatePreview()" placeholder="Ej. Pérez">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">No. Empleado</label>
-                            <input type="text" id="f-num-emp" class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#6eb646] outline-none" oninput="updatePreview()" placeholder="Ej. 1045">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1">Departamento</label>
-                            <input type="text" id="f-depto" class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#6eb646] outline-none" oninput="updatePreview()" placeholder="Ej. Ventas">
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Vehicle Data -->
-            <section class="space-y-3">
-                <h2 class="text-xs font-bold text-[#6eb646] uppercase tracking-wider border-b border-gray-200 pb-1">2. Datos del Vehículo</h2>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Seleccionar Unidad (Base de Datos)</label>
-                    <select id="f-vehiculo-select" onchange="fillVehicleData()" class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#6eb646] outline-none bg-gray-50">
-                        <option value="">-- Llenado Manual o Seleccione --</option>
-                        <option value="0">ECO-012 | Nissan Versa (2022) | JKL-9012</option>
-                        <option value="1">ECO-015 | Chevrolet Aveo (2023) | MNO-3456</option>
-                        <option value="2">ECO-022 | Toyota Hilux (2021) | PQR-7890</option>
-                    </select>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase">Económico</label>
-                        <input type="text" id="f-eco" class="w-full border-b border-gray-300 py-1 text-sm bg-transparent outline-none focus:border-[#6eb646]" oninput="updatePreview()">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase">Placas</label>
-                        <input type="text" id="f-placas" class="w-full border-b border-gray-300 py-1 text-sm bg-transparent outline-none focus:border-[#6eb646]" oninput="updatePreview()">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase">Marca</label>
-                        <input type="text" id="f-marca" class="w-full border-b border-gray-300 py-1 text-sm bg-transparent outline-none focus:border-[#6eb646]" oninput="updatePreview()">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase">Modelo/Año</label>
-                        <input type="text" id="f-modelo" class="w-full border-b border-gray-300 py-1 text-sm bg-transparent outline-none focus:border-[#6eb646]" oninput="updatePreview()">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-[10px] font-semibold text-gray-500 uppercase">Serie (VIN)</label>
-                        <input type="text" id="f-vin" class="w-full border-b border-gray-300 py-1 text-sm font-mono bg-transparent outline-none focus:border-[#6eb646]" oninput="updatePreview()">
-                    </div>
-                </div>
-            </section>
-
-            <!-- Signature Pad -->
-            <section class="space-y-3">
-                <h2 class="text-xs font-bold text-[#6eb646] uppercase tracking-wider border-b border-gray-200 pb-1">3. Firma Digital</h2>
-                <div class="border border-gray-300 rounded-md bg-white p-1 shadow-inner relative">
-                    <p class="absolute top-2 left-2 text-[10px] text-gray-300 pointer-events-none">Firmar aquí...</p>
-                    <canvas id="signature-pad" class="w-full h-24 cursor-crosshair touch-none"></canvas>
-                </div>
-                <button onclick="clearSignature()" class="w-full bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 text-xs py-1.5 rounded-md font-semibold transition">
-                    Borrar y Volver a Firmar
-                </button>
-            </section>
-        </div>
-
-        <div class="p-4 border-t border-gray-200 bg-white mt-auto">
-            <button onclick="window.print()" class="w-full bg-[#6eb646] hover:bg-green-600 text-white px-4 py-3 rounded-md text-sm font-bold shadow-lg flex justify-center items-center gap-2 transition transform active:scale-95">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                Imprimir / Guardar PDF
-            </button>
-        </div>
-    </aside>
-
-    <main class="flex-1 overflow-y-auto bg-gray-200 flex justify-center py-10 print-container-bg">
-        
-        <!-- THE DOCUMENT: Fixed dimensions, Flex-col, justify-between to guarantee 1 full page -->
-        <div id="print-area" class="page-preview bg-white shadow-2xl relative flex flex-col justify-between p-[1.5cm]">
-            
-            <!-- Header Group -->
-            <div>
-                <!-- Top Logo & Date Row -->
-                <div class="flex justify-between items-start mb-10">
-                    <div class="w-1/2">
-                        <img src="image_165297.png" alt="Logo Salevale" class="h-16 object-contain" onerror="this.outerHTML='<div class=\'text-3xl font-bold\'><span class=\'text-blue-700\'>Sale</span><span class=\'text-[#6eb646]\'>vale</span></div>'"/>
-                    </div>
-                    <div class="text-right w-1/2 pt-2">
-                        <p class="text-sm text-gray-700">
-                            <strong>Culiacán, Sinaloa</strong>, a <br>
-                            <span class="font-medium text-[#6eb646]">23 de septiembre de 2026</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Document Title -->
-                <div class="text-center mb-10">
-                    <h1 class="text-2xl font-black text-gray-900 uppercase tracking-widest border-b-2 border-[#6eb646] inline-block pb-1">
-                        Carta Responsiva
-                    </h1>
-                    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-widest mt-2">
-                        Asignación de Vehículo Utilitario
-                    </h2>
-                </div>
-
-                <div class="text-justify text-base text-gray-800 leading-relaxed mb-8">
-                    <p>
-                        Por medio del presente documento, yo <strong class="uppercase border-b border-gray-400 px-2"><span id="p-nombre">__________________</span> <span id="p-apellidos">__________________</span></strong>, 
-                        identificado(a) con el número de empleado <strong class="border-b border-gray-400 px-2"><span id="p-num-emp">_______</span></strong> y adscrito(a) al departamento de 
-                        <strong class="uppercase border-b border-gray-400 px-2"><span id="p-depto">__________________</span></strong>, reconozco y hago constar que he recibido el día de hoy, a mi entera satisfacción y bajo mi estricta responsabilidad, el vehículo propiedad de la empresa para el desarrollo de mis actividades, mismo que se detalla a continuación:
-                    </p>
-                </div>
-
-                <div class="mb-10">
-                    <div class="bg-gray-100 border-t-4 border-[#6eb646] rounded-b-lg p-5">
-                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-widest mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-[#6eb646]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                            Especificaciones de la Unidad
-                        </h3>
-                        
-                        <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                            <div class="flex justify-between border-b border-gray-300 pb-1">
-                                <span class="text-xs font-bold text-gray-500 uppercase">No. Económico</span>
-                                <span class="text-base font-bold text-gray-900" id="p-eco">----------</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-300 pb-1">
-                                <span class="text-xs font-bold text-gray-500 uppercase">Placas</span>
-                                <span class="text-base font-bold text-gray-900" id="p-placas">----------</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-300 pb-1">
-                                <span class="text-xs font-bold text-gray-500 uppercase">Marca</span>
-                                <span class="text-base font-medium text-gray-800" id="p-marca">----------</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-300 pb-1">
-                                <span class="text-xs font-bold text-gray-500 uppercase">Modelo / Año</span>
-                                <span class="text-base font-medium text-gray-800" id="p-modelo">----------</span>
-                            </div>
-                            <div class="col-span-2 flex justify-between border-b border-gray-300 pb-1">
-                                <span class="text-xs font-bold text-gray-500 uppercase">Número de Serie (VIN)</span>
-                                <span class="text-base font-mono font-bold text-gray-900" id="p-vin">-----------------</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-base font-bold text-gray-800 uppercase tracking-wider mb-4 border-b-2 border-gray-200 pb-1 inline-block">
-                        Cláusulas y Condiciones
-                    </h3>
-                    <ul class="space-y-4 text-sm text-gray-700 leading-relaxed text-justify">
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 w-2 h-2 rounded-full bg-[#6eb646] shrink-0"></div>
-                            <p><strong>Exclusividad de Uso:</strong> Me comprometo a utilizar el vehículo estrictamente para el desempeño de mis funciones laborales, quedando estrictamente prohibido su uso para fines personales o ajenos a la compañía.</p>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 w-2 h-2 rounded-full bg-[#6eb646] shrink-0"></div>
-                            <p><strong>Mantenimiento y Cuidado:</strong> Asumo la responsabilidad de mantener el vehículo en óptimas condiciones de limpieza y funcionalidad mecánica, reportando de manera oportuna cualquier anomalía y revisando periódicamente los niveles básicos (aceite, agua, llantas).</p>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 w-2 h-2 rounded-full bg-[#6eb646] shrink-0"></div>
-                            <p><strong>Infracciones y Multas:</strong> Me hago total y legalmente responsable del pago de cualquier multa, infracción de tránsito, así como del pago de deducibles de seguro que resulten de mi negligencia, impericia o falta de precaución al conducir.</p>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <div class="mt-1 w-2 h-2 rounded-full bg-[#6eb646] shrink-0"></div>
-                            <p><strong>Siniestros:</strong> En caso de robo, accidente o percance, me comprometo a reportarlo de manera inmediata a las autoridades competentes y al área responsable de la empresa, evitando mover el vehículo del lugar de los hechos salvo indicación oficial.</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="pt-8">
-                <p class="text-center text-sm text-gray-800 font-medium mb-12">
-                    Leído el presente documento y plenamente enterado(a) de su alcance y fuerza legal, lo firmo de total conformidad.
-                </p>
-                
-                <div class="flex flex-row justify-between items-end px-10">
-                    <!-- Employee Signature -->
-                    <div class="text-center w-5/12 relative">
-                        <div class="h-16 flex items-end justify-center mb-1 absolute bottom-full left-0 right-0">
-                            <img id="p-signature-img" src="" class="max-h-full max-w-full hidden object-contain opacity-90 mix-blend-multiply pointer-events-none">
-                        </div>
-                        <div class="border-t-2 border-gray-800 pt-2">
-                            <p class="font-bold text-sm uppercase text-gray-900 truncate"><span id="p-sign-nombre">_________________________</span></p>
-                            <p class="text-xs mt-1 text-gray-500 font-semibold uppercase">Empleado Responsable</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Company Signature -->
-                    <div class="text-center w-5/12">
-                        <div class="border-t-2 border-gray-800 pt-2">
-                            <p class="font-bold text-sm uppercase text-gray-900">Control de Flotilla</p>
-                            <p class="text-xs mt-1 text-gray-500 font-semibold uppercase">Autoriza Asignación</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <script>
+<script>
         // Mock Database for dropdown demo
         const mockDatabase = [
             { eco: 'ECO-012', placas: 'JKL-9012', modelo: '2022', marca: 'Nissan Versa', vin: '3N1CN7AP5KL123XXX' },
@@ -358,6 +80,8 @@
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', stopDrawing);
             canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch events para móviles
             canvas.addEventListener('touchstart', startDrawingTouch, { passive: false });
             canvas.addEventListener('touchmove', drawTouch, { passive: false });
             canvas.addEventListener('touchend', stopDrawing);
@@ -376,8 +100,17 @@
             return { x: clientX - rect.left, y: clientY - rect.top };
         }
 
-        function startDrawing(e) { isDrawing = true; const pos = getPos(e); lastX = pos.x; lastY = pos.y; }
-        function startDrawingTouch(e) { e.preventDefault(); startDrawing(e); }
+        function startDrawing(e) { 
+            isDrawing = true; 
+            const pos = getPos(e); 
+            lastX = pos.x; 
+            lastY = pos.y; 
+        }
+        
+        function startDrawingTouch(e) { 
+            e.preventDefault(); 
+            startDrawing(e); 
+        }
         
         function draw(e) {
             if (!isDrawing) return;
@@ -389,4 +122,33 @@
             lastX = pos.x;
             lastY = pos.y;
         }
-        function drawTouch(e) { e.preventDefault(); draw(e); }
+        
+        function drawTouch(e) { 
+            e.preventDefault(); 
+            draw(e); 
+        }
+
+        // === FUNCIONES FALTANTES AÑADIDAS AQUÍ ABAJO ===
+
+        function stopDrawing() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            syncSignatureToDocument(); // Copiamos la firma al documento imprimible
+        }
+
+        function syncSignatureToDocument() {
+            const signatureImg = document.getElementById('p-signature-img');
+            // Convertimos lo que se dibujó en el canvas a una imagen en base64
+            signatureImg.src = canvas.toDataURL('image/png');
+            signatureImg.classList.remove('hidden'); // Mostramos la imagen en el documento final
+        }
+
+        function clearSignature() {
+            // Limpiar el canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Limpiar y ocultar la imagen en el documento
+            const signatureImg = document.getElementById('p-signature-img');
+            signatureImg.src = "";
+            signatureImg.classList.add('hidden');
+        }
+    </script>
